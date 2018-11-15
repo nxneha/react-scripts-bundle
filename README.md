@@ -72,9 +72,45 @@ Remove or comment out these lines of code:
 
 #### `script/utils/createJestConfig.js`
 
-#####
+Modify the `config` object in this file as follows:
 
-TODO
+##### Ignore transform
+
+Replace the `transformIgnorePatterns` key:
+
+```json
+transformIgnorePatterns: [
+  "<rootDir>/node_modules/(?!@)",
+  "<rootDir>/src/node_modules/(?!@)"
+],
+```
+
+##### moduleNameMapper
+
+Add the third key to `moduleNameMapper`:
+
+```javascript
+moduleNameMapper: {
+  '^react-native$': 'react-native-web',
+  '^.+\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
+  "\\.(css|less|scss|sass)$": "identity-obj-proxy"
+},
+```
+
+##### Ignore files
+
+Add the following object to `config`:
+
+```json
+testPathIgnorePatterns: [
+  "<rootDir>[/\\\\](build|docs|node_modules|scripts)[/\\\\]",
+  "<rootDir>/src/lib/models",
+  "<rootDir>/src/lib/vspk",
+  "<rootDir>/src/lib/vis-graphs",
+  "<rootDir>/src/lib/test-utils",
+  "<rootDir>/src/lib/service",
+],
+```
 
 ## Built with
 

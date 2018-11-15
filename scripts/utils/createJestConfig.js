@@ -60,7 +60,8 @@ module.exports = (resolve, rootDir, isEjecting) => {
       "<rootDir>/src/lib/models",
       "<rootDir>/src/lib/vspk",
       "<rootDir>/src/lib/vis-graphs",
-      "<rootDir>/src/lib/test-utils"
+      "<rootDir>/src/lib/test-utils",
+      "<rootDir>/src/lib/service",
     ],
     transformIgnorePatterns: [
       "<rootDir>/node_modules/(?!@)",

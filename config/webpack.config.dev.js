@@ -215,6 +215,16 @@ module.exports = {
         // match the requirements. When no loader matches it will fall
         // back to the "file" loader at the end of the loader list.
         oneOf: [
+          // "base64-inline-loader" converts matching images to base64 strings.
+          // If you add this loader at the top, you can leave the "url-loader"
+          // as it is, since webpack will use the first loader it matches.
+          {
+            test: /\.(jpe?g|png|gif|svg)$/i,
+            loader: require.resolve('base64-inline-loader'),
+            options: {
+              name: 'static/media/[name].[hash:8].[ext]',
+            }
+          },
           // "url" loader works like "file" loader except that it embeds assets
           // smaller than specified limit in bytes as data URLs to avoid requests.
           // A missing `test` is equivalent to a match.

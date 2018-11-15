@@ -57,6 +57,38 @@ _**Current version: [2.1.1](https://github.com/facebook/create-react-app/tree/v2
 
 The following customization has been done to the original `react-scripts` package.
 
+#### `package.json`
+
+Add the following packages to the manifest file:
+
+```json
+    "base64-inline-loader": "^1.1.0",
+```
+
+#### `config/webpack.config.dev` and `config/webpack.config.prod`
+
+##### base64-inline-loader
+
+Add this loader at the top of the config objects, right under `oneOf` key. Make sure it is present before `url-loader` settings.
+
+```javascript
+oneOf: [
+  // "base64-inline-loader" converts matching images to base64 strings.
+  // If you add this loader at the top, you can leave the "url-loader"
+  // as it is, since webpack will use the first loader it matches.
+  {
+    test: /\.(jpe?g|png|gif|svg)$/i,
+    loader: require.resolve('base64-inline-loader'),
+    options: {
+      name: 'static/media/[name].[hash:8].[ext]',
+    }
+  },
+  // [... "url-loader" settings and so on ...]
+]
+```
+
+Keeping this loader at the top means that if an image file matches its test, it will be converted to base64 string as intented. The remaining loaders will not be checked, so `url-loader` will not be used for the matching file.
+
 #### `scripts/start.js`
 
 ##### Disable typescript checking

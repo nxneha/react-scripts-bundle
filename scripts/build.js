@@ -43,6 +43,7 @@ const formatWebpackMessages = require('react-dev-utils/formatWebpackMessages');
 const printHostingInstructions = require('react-dev-utils/printHostingInstructions');
 const FileSizeReporter = require('react-dev-utils/FileSizeReporter');
 const printBuildError = require('react-dev-utils/printBuildError');
+const { exec } = require('child_process');
 
 const measureFileSizesBeforeBuild =
   FileSizeReporter.measureFileSizesBeforeBuild;
@@ -79,6 +80,8 @@ checkBrowsers(paths.appPath, isInteractive)
     fs.emptyDirSync(paths.appBuild);
     // Merge with the public folder
     copyPublicFolder();
+    //copy the webapp folder required for the war file
+    copyWebappFolder();
     // Start the webpack build
     return build(previousFileSizes);
   })
@@ -192,6 +195,9 @@ function build(previousFileSizes) {
           .catch(error => reject(new Error(error)));
       }
 
+      // create the war file
+      buildWarFile();
+
       return resolve(resolveArgs);
     });
   });
@@ -202,4 +208,24 @@ function copyPublicFolder() {
     dereference: true,
     filter: file => file !== paths.appHtml,
   });
+}
+
+function copyWebappFolder() {
+  fs.copySync(paths.webapp, paths.appBuild, {
+    dereference: true,
+  });
+}
+
+function buildWarFile() {
+    const cmd = 'cd build && jar -cf vsd-architect.war *';
+    console.log(`Generating war file: ${cmd}`);
+    exec(cmd, (error, stdout, stderr) => {
+        console.log(`${cmd} returned ${error}`);
+        if  (error) {
+            printErrors(`Failed to generate war file: ${error}`);
+        } else {
+            console.log(`stdout: ${stdout}`);
+            console.log(`stderr: ${stderr}`);
+        }
+    });
 }
